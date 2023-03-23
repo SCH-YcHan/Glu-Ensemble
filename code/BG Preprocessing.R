@@ -8,9 +8,9 @@ csv_folder_path <- "../data/BG EDA/"
 csv_file_names <- list.files(csv_folder_path)
 
 #Remove files with more than 10% incorrectly recorded blood glucose values from the experiment
-remove_csv <- paste0(c("S018", "S091", "S105", "S109"), ".csv")
+remove_csv <- paste0(c("S018", "S091", "S105", "S109", "S122", "S131", "S133", "S138"), ".csv")
 
-#Change in file count(113 -> 109)
+#Change in file count(140 -> 132)
 csv_file_names <- setdiff(csv_file_names, remove_csv)
 
 #Merge data
@@ -52,7 +52,7 @@ for(csv_name in csv_file_names){
   bg_df <- rbind(bg_df, result)
 }
 
-#Change in file count(109 -> 107)
+#Change in file count(132 -> 130)
 bg_df2 <- bg_df %>% 
   group_by(file_name) %>% 
   filter(length(file_name)>100)

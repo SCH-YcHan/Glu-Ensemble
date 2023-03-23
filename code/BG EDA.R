@@ -21,12 +21,16 @@ for(file_name in xlsx_file_names){
                 "patient", "device", "source",
                 "glucose", "insulin", "carbo",
                 "time", "glu_v", "tm", "tm_id")
-
+  
   f2 <- f %>%
     select(time_stamp, event, glucose, insulin, carbo) %>%
     filter(!is.na(time_stamp))
-
-  write.csv(f2, paste0("../data/BG EDA/", strsplit(file_name, "\\.")[[1]][1], ".csv"), row.names = F)
+  
+  write.csv(
+    f2,
+    paste0("../data/BG EDA/", strsplit(file_name, "\\.")[[1]][1], ".csv"),
+    row.names = F
+  )
 }
 
 csv_folder_path <- "../data/BG EDA/"
