@@ -71,3 +71,4 @@ for(csv_nan in csv_names){
   time_interval <- rbind(time_interval, row)
 }
 time_interval
+
