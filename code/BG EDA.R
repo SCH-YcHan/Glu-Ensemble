@@ -57,8 +57,8 @@ range <- function(x){
 }
 
 time_interval <- data.frame()
-for(csv_nan csv_names){
-  f <- read.csv(paste0(csv_path,file_ csv_name))
+for(csv_nan in csv_names){
+  f <- read.csv(paste0(csv_folder_path, csv_name))
   f$time_stamp <- ymd_hfolder_ms(f$time_stamp)
   
   row <- f %>% 
@@ -71,5 +71,3 @@ for(csv_nan csv_names){
   time_interval <- rbind(time_interval, row)
 }
 time_interval
-
-f <
