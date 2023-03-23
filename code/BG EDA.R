@@ -27,10 +27,14 @@ for(file_name in xlsx_file_names){
     filter(!is.na(time_stamp))
 
   write.csv(f2, paste0("../data/BG EDA/", strsplit(file_name, "\\.")[[1]][1], ".csv"), row.names = F)
-}- csv_folder/data/BG EDA/"
-csv_names <-csv_filest.files("../data/BG csv_folder_path? ??Checking files for strange blood glucose valuese <- data.frame()
+}
+
+csv_folder_path <- "/data/BG EDA/"
+csv_names <- list.files(csv_folder_path)
+
+not_bg_value <- data.frame()
 for(csv_name in csv_names){
-  f file_<- read.csv(paste0(csv_path, csv_nafolder_me))
+  f <- read.csv(paste0(csv_folder_path, csv_name))
   
   if(!is.numeric(f$glucose)){
     row <- table(f$glucose) %>% 
@@ -43,15 +47,17 @@ for(csv_name in csv_names){
     not_bg_value <- rbind(not_bg_value, row)
   }
 }
-not_bg_value #?????? ????){(x, na.rm=T)
+not_bg_value
+
+range <- function(x){
+  min_v <- min(x, na.rm=T)
   max_v <- max(x, na.rm=T)
   
   return(paste0(min_v, " ~ ", max_v))
 }
 
-#?ν??? or ź??ȭ?? ?? ??�� Ȯ??
-ran#Check the range of blood glucose measurement intervals
-me in csv_names){
+time_interval <- data.frame()
+for(csv_nan csv_names){
   f <- read.csv(paste0(csv_path,file_ csv_name))
   f$time_stamp <- ymd_hfolder_ms(f$time_stamp)
   
@@ -66,4 +72,4 @@ me in csv_names){
 }
 time_interval
 
-f <- read.csv(paste0(csv_path, "S002.csv
+f <
