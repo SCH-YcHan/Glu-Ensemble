@@ -29,7 +29,7 @@ for(file_name in xlsx_file_names){
   write.csv(f2, paste0("../data/BG EDA/", strsplit(file_name, "\\.")[[1]][1], ".csv"), row.names = F)
 }
 
-csv_folder_path <- "/data/BG EDA/"
+csv_folder_path <- "../data/BG EDA/"
 csv_names <- list.files(csv_folder_path)
 
 not_bg_value <- data.frame()
@@ -57,9 +57,9 @@ range <- function(x){
 }
 
 time_interval <- data.frame()
-for(csv_nan in csv_names){
+for(csv_name in csv_names){
   f <- read.csv(paste0(csv_folder_path, csv_name))
-  f$time_stamp <- ymd_hfolder_ms(f$time_stamp)
+  f$time_stamp <- ymd_hms(f$time_stamp)
   
   row <- f %>% 
     filter(event=="EGV") %>% 
