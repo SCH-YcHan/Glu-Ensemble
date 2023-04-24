@@ -69,15 +69,19 @@ plotParkesGrid(
 )
 dev.off()
 
-
 zones_lr <- getParkesZones(
   referenceVals = lr,
   testVals = y_true,
   type=2
 )
-zones_lr <- factor(zones_lr)
-table(zones_lr)
-round(table(zones_lr)/length(zones_lr)*100, 3)
+zones_lr <- factor(zones_lr, levels = c("A", "B", "C", "D", "E"))
+EGA_table_lr <- data.frame(round(table(zones_lr)/length(zones_lr)*100, 3))
+names(EGA_table_lr) <- c("Zone", "LR")
+A_B <- data.frame(
+  Zone = "A+B",
+  LR = EGA_table_lr$LR[1] + EGA_table_lr$LR[2]
+)
+EGA_table_lr <- rbind(A_B, EGA_table_lr)
 
 
 zones_lasso <- getParkesZones(
@@ -85,9 +89,14 @@ zones_lasso <- getParkesZones(
   testVals = y_true,
   type=2
 )
-zones_lasso <- factor(zones_lasso)
-table(zones_lasso)
-round(table(zones_lasso)/length(zones_lasso)*100, 3)
+zones_lasso <- factor(zones_lasso, levels = c("A", "B", "C", "D", "E"))
+EGA_table_lasso <- data.frame(round(table(zones_lasso)/length(zones_lasso)*100, 3))
+names(EGA_table_lasso) <- c("Zone", "LASSO")
+A_B <- data.frame(
+  Zone = "A+B",
+  LASSO = EGA_table_lasso$LASSO[1] + EGA_table_lasso$LASSO[2]
+)
+EGA_table_lasso <- rbind(A_B, EGA_table_lasso)
 
 
 zones_naive <- getParkesZones(
@@ -95,9 +104,14 @@ zones_naive <- getParkesZones(
   testVals = test_naive$y12,
   type=2
 )
-zones_naive <- factor(zones_naive)
-table(zones_naive)
-round(table(zones_naive)/length(zones_naive)*100, 3)
+zones_naive <- factor(zones_naive, levels = c("A", "B", "C", "D", "E"))
+EGA_table_naive <- data.frame(round(table(zones_naive)/length(zones_naive)*100, 3))
+names(EGA_table_naive) <- c("Zone", "NAIVE")
+A_B <- data.frame(
+  Zone = "A+B",
+  NAIVE = EGA_table_naive$NAIVE[1] + EGA_table_naive$NAIVE[2]
+)
+EGA_table_naive <- rbind(A_B, EGA_table_naive)
 
 
 zones_avg <- getParkesZones(
@@ -105,6 +119,49 @@ zones_avg <- getParkesZones(
   testVals = y_true,
   type=2
 )
-zones_avg <- factor(zones_avg)
-table(zones_avg)
-round(table(zones_avg)/length(zones_avg)*100, 3)
+zones_avg <- factor(zones_avg, levels = c("A", "B", "C", "D", "E"))
+EGA_table_avg <- data.frame(round(table(zones_avg)/length(zones_avg)*100, 3))
+names(EGA_table_avg) <- c("Zone", "AVG")
+A_B <- data.frame(
+  Zone = "A+B",
+  AVG = EGA_table_avg$AVG[1] + EGA_table_avg$AVG[2]
+)
+EGA_table_avg <- rbind(A_B, EGA_table_avg)
+
+EGA_table_lr
+EGA_table_lasso
+EGA_table_avg
+EGA_table_naive
+
+EGA_table = cbind(
+  EGA_table_lr,
+  EGA_table_lasso %>% select(LASSO),
+  EGA_table_avg %>% select(AVG),
+  EGA_table_naive %>% select(NAIVE)
+) %>% t %>% data.frame
+names(EGA_table) <- NULL
+
+LLN <- read.csv("../../data/BG LBStack Pred/Test_RMSE_lbstack.csv")
+AVG <- read.csv("../../data/BG Avg Pred/Test_RMSE_avg.csv")
+
+RMSE_table = rbind(LLN, AVG)
+names(RMSE_table) <- c("Method", names(RMSE_table)[-1])
+
+MEAN_SD <- function(x){
+  mean_val = round(mean(x), 3)
+  sd_val = round(sd(x), 3)
+  mean_sd <- paste0(mean_val,"(", sd_val, ")")
+  return(mean_sd)
+}
+
+RMSE_MEAN_SD <- RMSE_table %>% 
+  select(-Method) %>% 
+  apply(1, MEAN_SD)
+
+RMSE_table["MEAN_SD"] = RMSE_MEAN_SD
+RMSE_table <- RMSE_table[c(1,2,4,3),]
+
+print(RMSE_table)
+print(EGA_table)
+
+
