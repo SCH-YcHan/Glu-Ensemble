@@ -39,7 +39,7 @@ lr_ega <- plotParkesGrid(
   referenceVals = y_true,
   testVals = lr,
   type = 2,
-  title = "Parkes (Consensus) Error Grid for Type 2 Diabetes [LR]",
+  title = "Parkes Error Grid for Type 2 Diabetes [Linear]",
   xlab = " "
 )
 lr_ega
@@ -50,7 +50,7 @@ lasso_ega <- plotParkesGrid(
   referenceVals = y_true,
   testVals = lasso,
   type = 2,
-  title = "Parkes (Consensus) Error Grid for Type 2 Diabetes [LASSO]",
+  title = "Parkes Error Grid for Type 2 Diabetes [Lasso]",
   xlab = " ",
   ylab = " "
 )
@@ -62,7 +62,7 @@ naive_ega <- plotParkesGrid(
   referenceVals = test_naive$y12,
   testVals = test_naive$y12_shifted,
   type = 2,
-  title = "Parkes (Consensus) Error Grid for Type 2 Diabetes [NAIVE]",
+  title = "Parkes Error Grid for Type 2 Diabetes [Naive]",
   ylab = " "
 )
 naive_ega
@@ -73,7 +73,7 @@ avg_ega <- plotParkesGrid(
   referenceVals = y_true,
   testVals = avg,
   type = 2,
-  title = "Parkes (Consensus) Error Grid for Type 2 Diabetes [AVG]",
+  title = "Parkes Error Grid for Type 2 Diabetes [Soft]",
 )
 avg_ega
 dev.off()
@@ -89,10 +89,10 @@ zones_lr <- getParkesZones(
 )
 zones_lr <- factor(zones_lr, levels = c("A", "B", "C", "D", "E"))
 EGA_table_lr <- data.frame(round(table(zones_lr)/length(zones_lr)*100, 3))
-names(EGA_table_lr) <- c("Zone", "LR")
+names(EGA_table_lr) <- c("Zone", "Linear")
 A_B <- data.frame(
   Zone = "A+B",
-  LR = EGA_table_lr$LR[1] + EGA_table_lr$LR[2]
+  Linear = EGA_table_lr$Linear[1] + EGA_table_lr$Linear[2]
 )
 EGA_table_lr <- rbind(A_B, EGA_table_lr)
 
@@ -104,10 +104,10 @@ zones_lasso <- getParkesZones(
 )
 zones_lasso <- factor(zones_lasso, levels = c("A", "B", "C", "D", "E"))
 EGA_table_lasso <- data.frame(round(table(zones_lasso)/length(zones_lasso)*100, 3))
-names(EGA_table_lasso) <- c("Zone", "LASSO")
+names(EGA_table_lasso) <- c("Zone", "Lasso")
 A_B <- data.frame(
   Zone = "A+B",
-  LASSO = EGA_table_lasso$LASSO[1] + EGA_table_lasso$LASSO[2]
+  Lasso = EGA_table_lasso$Lasso[1] + EGA_table_lasso$Lasso[2]
 )
 EGA_table_lasso <- rbind(A_B, EGA_table_lasso)
 
@@ -119,10 +119,10 @@ zones_naive <- getParkesZones(
 )
 zones_naive <- factor(zones_naive, levels = c("A", "B", "C", "D", "E"))
 EGA_table_naive <- data.frame(round(table(zones_naive)/length(zones_naive)*100, 3))
-names(EGA_table_naive) <- c("Zone", "NAIVE")
+names(EGA_table_naive) <- c("Zone", "Naive")
 A_B <- data.frame(
   Zone = "A+B",
-  NAIVE = EGA_table_naive$NAIVE[1] + EGA_table_naive$NAIVE[2]
+  Naive = EGA_table_naive$Naive[1] + EGA_table_naive$Naive[2]
 )
 EGA_table_naive <- rbind(A_B, EGA_table_naive)
 
@@ -134,10 +134,10 @@ zones_avg <- getParkesZones(
 )
 zones_avg <- factor(zones_avg, levels = c("A", "B", "C", "D", "E"))
 EGA_table_avg <- data.frame(round(table(zones_avg)/length(zones_avg)*100, 3))
-names(EGA_table_avg) <- c("Zone", "AVG")
+names(EGA_table_avg) <- c("Zone", "Soft")
 A_B <- data.frame(
   Zone = "A+B",
-  AVG = EGA_table_avg$AVG[1] + EGA_table_avg$AVG[2]
+  Soft = EGA_table_avg$Soft[1] + EGA_table_avg$Soft[2]
 )
 EGA_table_avg <- rbind(A_B, EGA_table_avg)
 
@@ -148,9 +148,9 @@ EGA_table_naive
 
 EGA_table = cbind(
   EGA_table_lr,
-  EGA_table_lasso %>% select(LASSO),
-  EGA_table_avg %>% select(AVG),
-  EGA_table_naive %>% select(NAIVE)
+  EGA_table_lasso %>% select(Lasso),
+  EGA_table_avg %>% select(Soft),
+  EGA_table_naive %>% select(Naive)
 ) %>% t %>% data.frame
 names(EGA_table) <- NULL
 
@@ -182,7 +182,7 @@ RMSE_table_t <- RMSE_table %>%
   select(-Method, -MEAN_SD) %>% 
   t %>% 
   data.frame
-names(RMSE_table_t) <- RMSE_table$Method
+names(RMSE_table_t) <- c("Linear", "Lasso", "Soft", "Naive")
 
 png("../Fig6.png", width=2000, height=2000, res=300)
 boxplot(RMSE_table_t, ylab="RMSE", lwd=2, ylim=c(17, 30))
