@@ -187,3 +187,40 @@ names(RMSE_table_t) <- c("Linear", "Lasso", "Soft", "Naive")
 png("../Fig6.png", width=2000, height=2000, res=300)
 boxplot(RMSE_table_t, ylab="RMSE", lwd=2, ylim=c(17, 30))
 dev.off()
+
+
+
+
+LLN <- read.csv("../../data/BG LBStack Pred/Test_MAE_lbstack.csv")
+AVG <- read.csv("../../data/BG Avg Pred/Test_MAE_avg.csv")
+
+MAE_table = rbind(LLN, AVG)
+names(MAE_table) <- c("Method", names(MAE_table)[-1])
+
+MEAN_SD <- function(x){
+  mean_val = round(mean(x), 3)
+  sd_val = round(sd(x), 3)
+  mean_sd <- paste0(mean_val,"(", sd_val, ")")
+  return(mean_sd)
+}
+
+MAE_MEAN_SD <- MAE_table %>% 
+  select(-Method) %>% 
+  apply(1, MEAN_SD)
+
+MAE_table["MEAN_SD"] = MAE_MEAN_SD
+MAE_table <- MAE_table[c(1,2,4,3),]
+MAE_table[,2:11] <- data.frame(lapply(MAE_table[,2:11], function(x) round(x,3)))
+
+print(MAE_table)
+
+MAE_table_t <- MAE_table %>% 
+  select(-Method, -MEAN_SD) %>% 
+  t %>% 
+  data.frame
+names(MAE_table_t) <- c("Linear", "Lasso", "Soft", "Naive")
+
+png("../MAE_boxplot.png", width=2000, height=2000, res=300)
+boxplot(MAE_table_t, ylab="MAE", lwd=2, ylim=c(12.5, 19.5))
+dev.off()
+
